@@ -1,0 +1,152 @@
+
+
+<% if (info  != '') { %>
+<div class="alert alert-danger">
+   <%- info %>
+</div>
+<% } %>
+
+
+<form id="formulario" action="/guardar_retencion" method="POST">
+    <input type="hidden" id="oculto" name="oculto" value="0">
+
+    <div class="form-group">
+        <select name="cliente" id="cliente" required>                            
+        </select>
+        <small id="tipoHelp" class="form-text text-muted">Cliente</small>
+    </div>
+
+    <div class="form-group">
+        <input type="text" class="form-control" name="nro_factura" id="nro_factura" required>
+        <small id="tipoHelp" class="form-text text-muted">Nro de factura</small>
+    </div>
+
+    <div class="form-group">
+        <select name="clasificacion" id="clasificacion" required>     
+
+        </select>
+        <small id="tipoHelp" class="form-text text-muted">Tipo de clasificacion</small>
+    </div>
+
+    <div class="form-group">
+        <input type="text" class="form-control" name="porcentaje" id="porcentaje" readonly >
+        <small id="tipoHelp" class="form-text text-muted">Porcentaje de acuerdo a la clasificación</small>
+    </div> 
+
+    <div class="form-group">
+        <input type="text" class="form-control" name="monto" id="monto" required>
+        <small id="tipoHelp" class="form-text text-muted">Monto</small>
+    </div>
+
+    <div class="form-group">
+        <input type="text" class="form-control" name="retencion" id="retencion" readonly>
+        <small id="tipoHelp" class="form-text text-muted">Valor de retención</small>
+    </div>
+
+    <div class="form-group">
+        <input type="number" class="form-control" name="mes" id="mes" min="1" max="12" required>
+        <small id="tipoHelp" class="form-text text-muted">Mes</small>
+    </div> 
+
+    <button type="submit" class="btn btn-primary">GUARDAR</button>
+</form>
+
+
+
+<script>
+
+    $().ready(function () {
+        cargarClientes();
+        cargarTipos();
+    });
+
+    function cargarClientes() {
+        var url = "http://localhost:3000/sw/clientes";
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+                console.log(data.provincias);
+                var html = "<option value=''>Seleccione un cliente</option>";
+                $.each(data.clientes, function (i, item) {
+                    html += '<option value = "' + item + '">' + item + '</option>';
+                });
+                $("#cliente").html(html);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
+
+    function cargarTipos() {
+        var url = "http://localhost:3000/sw/tipos";
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+                console.log(data);
+                var html = "<option value=''>Seleccione un servicio</option>";
+                $.each(data.tipos, function (i, item) {
+                    html += '<option value = "' + item + '">' + item + '</option>';
+                });
+                $("#clasificacion").html(html);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
+
+    function cargarPorcentaje() {
+        var porcentaje = 0;
+        var tipo = $("#clasificacion").val();
+        console.log(tipo);
+        if (tipo == "Servicios Profesionales") {
+            porcentaje = 0.10;
+        }
+        if (tipo == "Servicios Educativos") {
+            porcentaje = 0.08;
+        }
+        $("#porcentaje").val(porcentaje);
+
+    }
+
+    function calcularRetencion() {
+        var valor = 0;
+        var monto = 0;
+        var porcentaje = 0;
+        porcentaje = $("#porcentaje").val();
+        monto = $("#monto").val();
+        valor = porcentaje * monto;
+        valor = valor.toFixed(2);
+        $("#retencion").val(valor);
+
+    }
+
+
+    $("#clasificacion").keyup(function () {
+        cargarPorcentaje();
+        calcularRetencion();
+    });
+
+    $("#clasificacion").change(function () {
+        cargarPorcentaje();
+        calcularRetencion();
+    });
+
+    $("#monto").keyup(function () {
+        calcularRetencion();
+    });
+
+    $("#monto").change(function () {
+        calcularRetencion();
+    });
+
+
+
+</script>

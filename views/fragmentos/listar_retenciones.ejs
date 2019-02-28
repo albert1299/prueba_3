@@ -1,0 +1,308 @@
+
+<header style="margin-bottom: 50px">
+    <% if (info  != '') { %>
+    <div class="alert alert-success">
+        <%- info %>
+    </div>
+    <% } %>
+</header>
+<div class="box">
+    <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+
+    <form id="formulario" action="/guardar_modificacion/" method="post">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div id="reporte" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modificar información</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <input type="hidden" id="external" name="external" value="0">
+
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="cliente" id="cliente" required>
+                            <small id="tipoHelp" class="form-text text-muted">Cliente</small>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Nro de factura" name="nro_factura" id="nro_factura" required>
+                            <small id="tipoHelp" class="form-text text-muted">Nro de factura</small>
+                        </div>
+
+                        <div class="form-group">
+                            <select name="clasificacion" id="clasificacion" required> 
+                            </select>
+                            <small id="tipoHelp" class="form-text text-muted">Tipo de clasificacion</small>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="porcentaje" id="porcentaje" readonly >
+                            <small id="tipoHelp" class="form-text text-muted">Porcentaje de acuerdo a la clasificación</small>
+                        </div> 
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="monto" id="monto" required>
+                            <small id="tipoHelp" class="form-text text-muted">Monto</small>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="retencion" id="retencion" readonly>
+                            <small id="tipoHelp" class="form-text text-muted">Valor de retención</small>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="number" class="form-control" name="mes" id="mes" min="1" max="12" required>
+                            <small id="tipoHelp" class="form-text text-muted">Mes</small>
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelar">Cancelar</button>
+                        <button type="submit" class="btn btn-success" id="btn">Guardar</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Valor de las retenciones</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <h5>Retenciones por mes:</h5>
+                    <span>Mes 1: <b><span id="mes1">0</span></b></span><br>
+                    <span>Mes 2: <b><span id="mes2">0</span></b></span><br>
+                    <span>Mes 3: <b><span id="mes3">0</span></b></span><br>
+                    <span>Mes 4: <b><span id="mes4">0</span></b></span><br>
+                    <span>Mes 5: <b><span id="mes5">0</span></b></span><br>
+                    <span>Mes 6: <b><span id="mes6">0</span></b></span><br>
+                    <span>Mes 7: <b><span id="mes7">0</span></b></span><br>
+                    <span>Mes 8: <b><span id="mes8">0</span></b></span><br>
+                    <span>Mes 9: <b><span id="mes9">0</span></b></span><br>
+                    <span>Mes 10: <b><span id="mes10">0</span></b></span><br>
+                    <span>Mes 11: <b><span id="mes11">0</span></b></span><br>
+                    <span>Mes 12: <b><span id="mes12">0</span></b></span><br><br>
+
+                    <h5>Total de retenciones:</h5>
+                    <span>Valor: <b><span id="total">0</span></b></span>
+
+                </div>
+                <div class="modal-footer">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row" style="margin-bottom: 55px;">
+        <div class="search">
+            <form action="/buscar_retencion" method="POST">
+                <div class="row text-left" style="margin-bottom:4px;">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 block-display">
+                        <div class="input-group" >
+                            <div class="input-group-addon">Mes</div>
+                            <input type="text" class="form-control" name="buscar_mes" id="buscar_mes">
+                        </div>
+                        <span class="error-msg"></span>
+                    </div>
+                    <div class="col-lg-12 col-md-12 ">
+                        <div class="input-group" >
+                            <button type="submit" class="btn btn-primary mb-2">Buscar</button>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <table id="tabla" class="table">
+        <thead>
+            <tr>
+                <th>Nro</th><th>Cliente</th><th>Nro_Factura</th><th>Porcentaje_Clasificacion</th><th>Monto</th><th>Valor retención</th><th>Mes</th><th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal2">Ver suma de retenciones</button><br><br>
+    <button type="button" class="btn btn-link"><a href="/generar_reporte">Generar reporte de retenciones</a></button>
+</div>
+
+
+
+<script>
+    var t = jQuery.noConflict();
+    t().ready(function () {
+        cargarTabla();
+        cargarTipos();
+        totalRetenciones();
+    });
+    function cargarTabla() {
+        var url = "http://localhost:3000/sw/retenciones"; ///test/sw/listaProdLot     
+        t.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+                var html = "";
+                t.each(data, function (i, item) {
+                    html += '<tr>';
+                    html += '<td>' + (i + 1) + '</td>';
+                    html += '<td>' + item.cliente + '</td>';
+                    html += '<td>' + item.nro_factura + '</td>';
+                    html += '<td>' + item.porcentaje_clasificacion + ' %</td>';
+                    html += '<td>$' + item.monto + '</td>';
+                    html += '<td>$' + item.valor_retencion + '</td>';
+                    html += '<td>' + item.mes + '</td>';
+                    html += '<td><button onclick="return modificar(' + item.id + ')" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Modificar</button><td>';
+                    
+                    html += '</tr>';
+                });
+                t("#tabla tbody").html(html);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+            }
+        });
+    }
+    function modificar(id) {
+        var url = "http://localhost:3000/sw/modificar/" + id; ///test/sw/listaProdLot     
+        t.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (data, textStatus, jqXHR) {
+                var html = "";
+                t("#cliente").val(data.retencion.cliente);
+                t("#nro_factura").val(data.retencion.nro_factura);
+                t("#clasificacion").val(data.retencion.tipo_clasificacion);
+                t("#porcentaje").val(data.retencion.porcentaje_clasificacion);
+                t("#monto").val(data.retencion.monto);
+                t("#retencion").val(data.retencion.valor_retencion);
+                t("#mes").val(data.retencion.mes);
+                t("#external").val(data.retencion.external_id);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+            }
+        });
+    }
+
+
+    function cargarTipos() {
+        var url = "http://localhost:3000/sw/tipos";
+        t.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+                console.log(data);
+                var html = "<option id='opcion' value=''>Seleccione un servicio</option>";
+                t.each(data.tipos, function (i, item) {
+                    html += '<option id="opcion" value = "' + item + '">' + item + '</option>';
+                });
+                t("#clasificacion").html(html);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+    }
+
+    function cargarPorcentaje() {
+        var porcentaje = 0;
+        var tipo = t("#clasificacion").val();
+        console.log(tipo);
+        if (tipo == "Servicios Profesionales") {
+            porcentaje = 0.10;
+        }
+        if (tipo == "Servicios Educativos") {
+            porcentaje = 0.08;
+        }
+        t("#porcentaje").val(porcentaje);
+    }
+
+    function calcularRetencion() {
+        var valor = 0;
+        var monto = 0;
+        var porcentaje = 0;
+        porcentaje = t("#porcentaje").val();
+        monto = t("#monto").val();
+        valor = porcentaje * monto;
+        valor = valor.toFixed(2);
+        t("#retencion").val(valor);
+    }
+
+
+    t("#clasificacion").keyup(function () {
+        cargarPorcentaje();
+        calcularRetencion();
+    });
+    t("#clasificacion").change(function () {
+        cargarPorcentaje();
+        calcularRetencion();
+    });
+    t("#monto").keyup(function () {
+        calcularRetencion();
+    });
+    t("#monto").change(function () {
+        calcularRetencion();
+    });
+    function totalRetenciones() {
+        var url = "http://localhost:3000/sw/sumar_retenciones"; ///test/sw/listaProdLot     
+        t.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+                t("#mes1").html(data.mes1);
+                t("#mes2").html(data.mes2);
+                t("#mes3").html(data.mes3);
+                t("#mes4").html(data.mes4);
+                t("#mes5").html(data.mes5);
+                t("#mes6").html(data.mes6);
+                t("#mes7").html(data.mes7);
+                t("#mes8").html(data.mes8);
+                t("#mes9").html(data.mes9);
+                t("#mes10").html(data.mes10);
+                t("#mes11").html(data.mes11);
+                t("#mes12").html(data.mes12);
+                t("#total").html(data.total);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+            }
+        });
+    }
+
+
+
+
+
+
+</script>

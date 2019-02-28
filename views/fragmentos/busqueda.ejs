@@ -1,0 +1,45 @@
+<div class="row" style="margin-bottom: 55px;">
+    <div class="search">
+        <form action="/buscar_retencion" method="POST">
+            <div class="row text-left" style="margin-bottom:4px;">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 block-display">
+                    <div class="input-group" >
+                        <div class="input-group-addon">Mes</div>
+                        <input type="text" class="form-control" name="buscar_mes" id="buscar_mes">
+                    </div>
+                    <span class="error-msg"></span>
+                </div>
+                <div class="col-lg-12 col-md-12 ">
+                    <div class="input-group" >
+                        <button type="submit" class="btn btn-primary mb-2">Buscar</button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<table id="tabla" class="table">
+    <thead>
+        <tr>
+            <th>Nro</th><th>Cliente</th><th>Nro_Factura</th><th>Porcentaje_Clasificacion</th><th>Monto</th><th>Valor retención</th><th>Mes</th><th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% lista.forEach(function(retencion, i) { %>
+        <tr>
+
+            <td><%= (i + 1) %></td>
+            <td><%= retencion.cliente %> </td>
+            <td><%= retencion.nro_factura %> </td>
+            <td><%= retencion.porcentaje_clasificacion %></td>
+            <td>$<%= retencion.monto %></td>
+            <td><%= retencion.valor_retencion %></td>
+            <td><%= retencion.mes %></td>
+
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
